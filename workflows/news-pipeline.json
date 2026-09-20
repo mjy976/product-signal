@@ -426,7 +426,7 @@
     },
     {
       "parameters": {
-        "chatId": "104228525",
+        "chatId": "YOUR_TELEGRAM_CHAT_ID",
         "text": "={{ $json.telegram_text }}",
         "additionalFields": {}
       },
@@ -720,7 +720,6 @@
   "versionId": "3c5dfd2c-4601-4af8-ac04-c6643ba1b382",
   "meta": {
     "templateCredsSetupCompleted": true,
-    "instanceId": "428fe2cac8983e7085ed968ef7255947920b6b4a4ac5951c8c42ec5936ed173c"
   },
   "nodeGroups": [],
   "id": "WoZiroQwmsgjq8GR",
