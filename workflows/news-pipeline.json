@@ -1,0 +1,728 @@
+{
+  "name": "Product Signal — News Pipeline",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        -224
+      ],
+      "id": "1c9131f8-4104-484d-9763-dc28934843fc",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://openai.com/news/rss.xml",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        -144
+      ],
+      "id": "7bf69569-50ad-49fa-8a88-9ae7827f7fb3",
+      "name": "RSS Read"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ccdfbe82-2ef2-4288-b998-bccd481e3ac1",
+              "name": "=title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "62272222-4bbb-4b2c-9e46-8afe27693dae",
+              "name": "=url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "f19b9330-990d-4446-8bd9-829598ff57e8",
+              "name": "=source",
+              "value": "OpenAI",
+              "type": "string"
+            },
+            {
+              "id": "c8b63a02-17e1-4ff9-96e6-72152c5e072d",
+              "name": "=published_at",
+              "value": "={{ $json.isoDate }}",
+              "type": "string"
+            },
+            {
+              "id": "6910e25e-22a0-4491-9261-374bf49a2f6e",
+              "name": "=content",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        0,
+        -144
+      ],
+      "id": "a6260d2f-5008-4d2f-8597-545a0c84489c",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ddce92e8-a79f-4f67-88ec-201a06484cef",
+              "leftValue": "={{ $json.published_at }}",
+              "rightValue": "={{ $now.minus({ hours: 24 }) }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        -144
+      ],
+      "id": "a0add2dd-dc99-48e1-9622-690e5a06c310",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "url": "https://techcrunch.com/feed/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.2,
+      "position": [
+        -224,
+        48
+      ],
+      "id": "2929701a-256e-4b4f-a615-cfc1be59e74f",
+      "name": "RSS Read1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        448,
+        -48
+      ],
+      "id": "90e9b502-c306-49fa-8651-6e6761bc1fd2",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a852b70f-827e-44b7-b1e2-40e743493906",
+              "name": "=title",
+              "value": "={{ $json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "dd5ddb06-b328-4e05-bade-74a69bb9b79e",
+              "name": "=url",
+              "value": "={{ $json.link }}",
+              "type": "string"
+            },
+            {
+              "id": "10fb25d0-1653-486e-9ee4-524614bde140",
+              "name": "source",
+              "value": "TechCrunch",
+              "type": "string"
+            },
+            {
+              "id": "d473a22a-7b40-4563-ae79-915f5cfe8d27",
+              "name": "=published_at",
+              "value": "={{ $json.isoDate }}",
+              "type": "string"
+            },
+            {
+              "id": "de060a4a-7f43-4686-bc6a-70b6dec7f360",
+              "name": "=content",
+              "value": "={{ $json.contentSnippet }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        0,
+        48
+      ],
+      "id": "85e1f7e2-e4a6-47d2-9f89-3c18669ddc8a",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3c92e7f3-9fa7-4039-9077-ab4cf96ce740",
+              "leftValue": "={{ $json.published_at }}",
+              "rightValue": "={{ $now.minus({ hours: 24 }) }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        48
+      ],
+      "id": "7e639937-1cb0-4587-83d0-4f1b51c99e98",
+      "name": "Filter1"
+    },
+    {
+      "parameters": {
+        "compare": "selectedFields",
+        "fieldsToCompare": "url",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        672,
+        -48
+      ],
+      "id": "87404f70-0220-4100-96f3-0b203e139ee8",
+      "name": "Remove Duplicates"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are the News Analyst for Product Signal, an AI-powered news intelligence system for Product, AI, Technology, and Business professionals.\n\nAnalyze the following news article.\n\nTitle:\n{{ $json.title }}\n\nSource:\n{{ $json.source }}\n\nPublished At:\n{{ $json.published_at }}\n\nContent:\n{{ $json.content }}\n\nEvaluate the article using these dimensions:\n\n1. category:\nChoose exactly one:\nProduct, AI, Technology, Business, Startup, Strategy, Other\n\n2. relevance:\nScore from 0 to 4 for relevance to a Product/Business/Technology professional.\n0 = Not relevant\n4 = Highly relevant\n\n3. impact:\nScore from 0 to 4 for potential business, product, technology, or market impact.\n0 = Negligible\n4 = Very high\n\n4. novelty:\nScore from 0 to 4 based on how new or significant the information is.\n0 = Not novel\n4 = Highly novel\n\n5. actionability:\nScore from 0 to 4 based on whether a professional could learn from, react to, or act on this information.\n0 = Not actionable\n4 = Highly actionable\n\n6. why_it_matters:\nExplain in 1-2 concise sentences why this news matters.\n\n7. product_takeaway:\nGive one concise takeaway for a Product Manager or Product professional.\n\nReturn ONLY valid JSON.\nDo not include markdown.\nDo not include ```json.\nDo not include any text before or after the JSON.\n\nUse exactly this structure:\n\n{\n  \"category\": \"AI\",\n  \"relevance\": 0,\n  \"impact\": 0,\n  \"novelty\": 0,\n  \"actionability\": 0,\n  \"why_it_matters\": \"\",\n  \"product_takeaway\": \"\"\n}",
+        "hasOutputParser": true,
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        896,
+        -48
+      ],
+      "id": "6f24c4a9-40d5-47a7-8066-0789a7bd9e34",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        896,
+        192
+      ],
+      "id": "b28d1d63-9ceb-4674-b4c9-310f565461bd",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "6uEDVwwotvNGWB1I",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"category\": \"AI\",\n  \"relevance\": 3,\n  \"impact\": 3,\n  \"novelty\": 2,\n  \"actionability\": 3,\n  \"why_it_matters\": \"This matters because it may affect how AI products are built and adopted.\",\n  \"product_takeaway\": \"Product teams should evaluate the implications for their AI workflows.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1040,
+        128
+      ],
+      "id": "3da0c168-f14c-4ed6-90f0-fba8c4176234",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ab6f0304-fb14-487a-bd0b-9ee9af916e9c",
+              "name": "=signal_score",
+              "value": "={{ (($json.output.relevance + $json.output.impact + $json.output.novelty + $json.output.actionability) / 16) * 10 }}",
+              "type": "string"
+            },
+            {
+              "id": "6affd306-02db-49ed-ab80-a6b663d75b2c",
+              "name": "=signal_level",
+              "value": "={{ \n  ((($json.output.relevance + $json.output.impact + $json.output.novelty + $json.output.actionability) / 16) * 10) >= 8\n    ? \"Must Know\"\n    : ((($json.output.relevance + $json.output.impact + $json.output.novelty + $json.output.actionability) / 16) * 10) >= 6\n      ? \"Worth Knowing\"\n      : \"Noise\"\n}}",
+              "type": "string"
+            },
+            {
+              "id": "11e33ce6-f826-42d3-9a10-bd48b4d51cb2",
+              "name": "=title",
+              "value": "={{ $('Remove Duplicates').item.json.title }}",
+              "type": "string"
+            },
+            {
+              "id": "91051efc-ed3f-4f3c-860d-98cc52562f92",
+              "name": "=url",
+              "value": "={{ $('Remove Duplicates').item.json.url }}",
+              "type": "string"
+            },
+            {
+              "id": "7ef1eca7-0b9d-45c9-b236-4fac428e605a",
+              "name": "=source",
+              "value": "={{ $('Remove Duplicates').item.json.source }}",
+              "type": "string"
+            },
+            {
+              "id": "4a0a7f3e-c438-423d-a8be-03b5088368c0",
+              "name": "=published_at",
+              "value": "={{ $('Remove Duplicates').item.json.published_at }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1248,
+        -48
+      ],
+      "id": "21a25ab4-231f-460a-8f9a-984312226d29",
+      "name": "Calculate Signal Score"
+    },
+    {
+      "parameters": {
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "signal_score",
+              "order": "descending"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        1472,
+        -48
+      ],
+      "id": "9f7e42c7-2a29-4b3c-9413-63f539af70d5",
+      "name": "Rank Signals"
+    },
+    {
+      "parameters": {
+        "maxItems": 5
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1696,
+        -48
+      ],
+      "id": "9f34a2cd-fe32-4ef7-a9d8-e15bc1d98e64",
+      "name": "Top 5 Signals"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        -48
+      ],
+      "id": "9f049a50-de70-4fff-95bf-801e9b88285f",
+      "name": "Aggregate Top 5"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are the AI Editor for Product Signal.\n\nYour job is to turn the selected top news signals into a concise daily intelligence brief for Product, AI, Technology, and Business professionals.\n\nBelow are the top 5 signals:\n\n{{ JSON.stringify($json.data) }}\n\nCreate a clear daily brief.\n\nFor each news item:\n- Write a short headline\n- Mention the source\n- Summarize what happened in 1 sentence\n- Explain why it matters in 1 sentence\n- Include the product takeaway in 1 sentence\n- Include the signal score\n\nThen add a short section:\n\"Today's Pattern\"\n\nIdentify the most important pattern or common theme across these 5 stories in 2-3 sentences.\n\nKeep the writing concise, professional, and insight-oriented.\n\nDo not invent facts that are not present in the input.\nDo not repeat the full article content.",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        2144,
+        -48
+      ],
+      "id": "44f800d4-5341-47bd-89eb-0a6886318b65",
+      "name": "AI Editor - Daily Brief"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-5.4-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-5.4-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        2144,
+        160
+      ],
+      "id": "c7289abe-ddd6-437d-ac10-e5366e0ba095",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "6uEDVwwotvNGWB1I",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "104228525",
+        "text": "={{ $json.telegram_text }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2720,
+        -48
+      ],
+      "id": "9c94d305-43a2-49d2-b315-c66d27d92c5e",
+      "name": "Send Daily Brief — Telegram",
+      "webhookId": "54a29067-b6d8-4f38-a9c5-d16ed20d5485",
+      "credentials": {
+        "telegramApi": {
+          "id": "kNvDrVhaA2HF3u1j",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0f3aac1e-1ccc-4153-9624-ee1b921d9785",
+              "name": "telegram_text",
+              "value": "={{\n  \"🧠 PRODUCT SIGNAL\\n\" +\n  \"Daily Intelligence Brief\\n\" +\n  \"📅 \" + $now.setZone(\"Asia/Tehran\").toFormat(\"yyyy/MM/dd\") +\n  \"\\n\\n\" +\n  $json.text\n    .replace(/^## Daily Intelligence Brief/m, \"\")\n    .replace(/^### /gm, \"\")\n    .replace(/\\*\\*Source:\\*\\*/g, \"📌 Source:\")\n    .replace(/\\*\\*What happened:\\*\\*/g, \"📰 What happened:\")\n    .replace(/\\*\\*Why it matters:\\*\\*/g, \"🎯 Why it matters:\")\n    .replace(/\\*\\*Product takeaway:\\*\\*/g, \"💡 Product takeaway:\")\n    .replace(/\\*\\*Signal score:\\*\\*/g, \"📊 Signal score:\")\n    .replace(/^## Today’s Pattern/m, \"━━━━━━━━━━━━━━━━━━\\n\\n📊 TODAY'S PATTERN\")\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        2496,
+        -48
+      ],
+      "id": "5313a5a1-bca0-48f2-9dc8-021a4c752a31",
+      "name": "Format Telegram Brief"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 19,
+              "triggerAtMinute": 35
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -480,
+        0
+      ],
+      "id": "8592ed89-7549-47c0-8a3f-63ccc10d4b88",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        []
+      ]
+    },
+    "RSS Read": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Read1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Calculate Signal Score",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Signal Score": {
+      "main": [
+        [
+          {
+            "node": "Rank Signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rank Signals": {
+      "main": [
+        [
+          {
+            "node": "Top 5 Signals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Top 5 Signals": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Top 5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Top 5": {
+      "main": [
+        [
+          {
+            "node": "AI Editor - Daily Brief",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Editor - Daily Brief",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Editor - Daily Brief": {
+      "main": [
+        [
+          {
+            "node": "Format Telegram Brief",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Telegram Brief": {
+      "main": [
+        [
+          {
+            "node": "Send Daily Brief — Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "RSS Read1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "3c5dfd2c-4601-4af8-ac04-c6643ba1b382",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "428fe2cac8983e7085ed968ef7255947920b6b4a4ac5951c8c42ec5936ed173c"
+  },
+  "nodeGroups": [],
+  "id": "WoZiroQwmsgjq8GR",
+  "tags": []
+}
